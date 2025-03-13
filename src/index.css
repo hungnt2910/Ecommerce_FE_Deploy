@@ -1,0 +1,39 @@
+@import "tailwindcss";
+/* Style for database HTML */
+.db-content {
+    @apply text-gray-800 leading-relaxed max-w-3xl mx-auto;
+  }
+  
+  /* Headings */
+  .db-content h2 {
+    @apply text-3xl font-bold text-gray-900 mb-4 border-b pb-2;
+  }
+  
+  .db-content h3 {
+    @apply text-2xl font-semibold text-gray-800 mt-6 mb-3;
+  }
+  
+  /* Paragraphs */
+  .db-content p {
+    @apply text-lg text-gray-700 mb-4;
+  }
+  
+  /* Lists */
+  .db-content ul {
+    @apply list-disc pl-5 space-y-2;
+  }
+  
+  .db-content li {
+    @apply text-lg text-gray-700;
+  }
+  
+  /* Remove icons (manually if needed) */
+  .db-content li::before {
+    content: none !important;
+  }
+  
+  /* Images */
+  .db-content img {
+    @apply rounded-lg shadow-md mx-auto my-4 max-w-full;
+  }
+  
