@@ -56,7 +56,7 @@ export const fetchCartListAsync = createAsyncThunk(
         );
       }
 
-      return response.data; // API response should return total quantity
+      return response.data;  // API response should return total quantity
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch cart quantity"

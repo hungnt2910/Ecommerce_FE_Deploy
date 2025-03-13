@@ -3,7 +3,7 @@ import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCartAsync } from "../../redux/slices/cartSlice";
 import { addToWishlistAsync } from "../../redux/slices/wishListSlice";
 import SkeletonLoader from "../Loader/SkeletionLoader";
@@ -14,11 +14,16 @@ export const ProductCard = ({ product }) => {
   const nav = useNavigate();
   const dispatch = useDispatch();
   const [isAdding, setIsAdding] = useState(false);
+  const { items, totalQuantity, loading, error } = useSelector(
+    (state) => state.cart
+  );
+
   // const cartLoading = useSelector((state) => state.cart.loading);
 
   useEffect(() => {
     setLiked(product?.wishlist || false);
   }, [product]);
+
 
   const handleAddToCart = async (variantId) => {
     setIsAdding(true);
@@ -30,6 +35,7 @@ export const ProductCard = ({ product }) => {
       })
       .catch((err) => {
         console.error("Add to Cart Failed:", err);
+        setIsAdding(false);
         toast.error(err);
       });
   };
