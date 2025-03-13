@@ -34,9 +34,8 @@ const UserActions = ({ setIsCartOpen }) => {
     localStorage.clear();
     dispatch(resetCartState());
     dispatch(resetWishlistState());
-    window.location.reload();
-
     nav("/");
+    window.location.reload();
     toast.success("Logout success");
   };
 

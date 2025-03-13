@@ -19,9 +19,10 @@ const MobileMenu = ({ toggleMenu, navLinks, categories, setIsCartOpen }) => {
     localStorage.clear();
     dispatch(resetCartState());
     dispatch(resetWishlistState());
+    nav("/");
     window.location.reload();
 
-    nav("/");
+    
     toast.success("Logout success");
   };
 
