@@ -16,7 +16,6 @@ export const ProductDetailInfo = ({
   selectedAttributes,
   selectedVariant,
 }) => {
-  // console.log(product)
   const [liked, setLiked] = useState(product?.wishlist || false);
   const nav = useNavigate();
   const dispatch = useDispatch();
@@ -26,53 +25,48 @@ export const ProductDetailInfo = ({
   useEffect(() => {
     setLiked(product?.wishlist || false);
   }, [product]);
-  // const cartLoading = useSelector((state) => state.cart.loading);
 
   const handleAddToWishList = async (productId) => {
-      const newLiked = !liked; 
-      setLiked(newLiked); 
-  
-      dispatch(addToWishlistAsync({ productId, status: newLiked }))
-        .unwrap()
-        .then(() => {
-        })
-        .catch((err) => {
-          console.error("Add To Wish List Failed: ", err);
-  
-          if (err === 400) {
-            toast.error("Please login!!!");
-            nav("/login");
-          } else {
-            toast.error(err);
-          }
-  
-          setLiked(!newLiked); 
-        });
-    };
+    const newLiked = !liked;
+    setLiked(newLiked);
+
+    dispatch(addToWishlistAsync({ productId, status: newLiked }))
+      .unwrap()
+      .then(() => {})
+      .catch((err) => {
+        console.error("Add To Wish List Failed: ", err);
+
+        if (err === 400) {
+          toast.error("Please login!!!");
+          nav("/login");
+        } else {
+          toast.error(err);
+        }
+
+        setLiked(!newLiked);
+      });
+  };
 
   const handleAttributeSelect = (type, value) => {
     const newSelectedAttributes = { ...selectedAttributes };
     if (newSelectedAttributes[type] === value) {
-      delete newSelectedAttributes[type]; // Bỏ chọn nếu đã chọn
+      delete newSelectedAttributes[type];
     } else {
-      newSelectedAttributes[type] = value; // Chọn giá trị mới
+      newSelectedAttributes[type] = value;
     }
     onAttributesChange(newSelectedAttributes);
   };
 
-  // Tính toán các giá trị tương thích cho một thuộc tính
   const getCompatibleValues = (type) => {
     const otherSelected = { ...selectedAttributes };
-    delete otherSelected[type]; // Loại bỏ thuộc tính hiện tại để kiểm tra
+    delete otherSelected[type];
 
-    // Lọc ra các biến thể (variants) mà vẫn thỏa mãn các thuộc tính đã chọn trước đó
     const compatibleVariants = variants.filter((v) =>
       Object.entries(otherSelected).every(([t, val]) =>
         v.attributes.some((attr) => attr.type === t && attr.value === val)
       )
     );
 
-    // Lấy tất cả các giá trị thuộc tính của `type` từ các biến thể phù hợp
     const compatibleValues = new Set(
       compatibleVariants.flatMap((v) =>
         v.attributes
@@ -83,18 +77,25 @@ export const ProductDetailInfo = ({
     return compatibleValues;
   };
 
-  // console.log(selectedVariant);
-  // console.log(product);
-
   const handleAddToCart = async (variantId, quantity) => {
-    setIsSelected(true);
     if (!variantId) {
+      setIsSelected(true);
       return;
     }
+
+    // Bổ sung kiểm tra số lượng so với tồn kho
+    if (quantity > selectedVariant.stock) {
+      toast.error(
+        `Not enough inventory. Only ${selectedVariant.stock} products left!`
+      );
+      return;
+    }
+
+    // Nếu số lượng hợp lệ, tiếp tục thêm vào giỏ hàng
     dispatch(addToCartAsync({ variantId, quantity }))
       .unwrap()
       .then(() => {
-        toast.success("Added to cart!");
+        toast.success("Đã thêm vào giỏ hàng!");
       })
       .catch((err) => {
         console.error("Add to Cart Failed:", err);
@@ -152,7 +153,7 @@ export const ProductDetailInfo = ({
             {attribute.values.map((value, index) => {
               const isSelected = selectedAttributes[attribute.type] === value;
               const compatibleValues = getCompatibleValues(attribute.type);
-              const isCompatible = compatibleValues.has(value); // Kiểm tra giá trị có có thuộc attribute không
+              const isCompatible = compatibleValues.has(value);
 
               return (
                 <li
@@ -203,7 +204,7 @@ export const ProductDetailInfo = ({
       </div>
       <div className="w-full flex flex-col gap-4">
         <span className="block mb-2">Delivery on March 5th-11th</span>
-        <div class="flex items-center gap-5">
+        <div className="flex items-center gap-5">
           <span>Quantity: </span>
           <div className="text-[#a4aaaf]">
             <button
@@ -219,7 +220,7 @@ export const ProductDetailInfo = ({
               onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
             />
             <button
-              className="bg-[#f7f7f7]  w-10 py-1 font-semibold border-l-0"
+              className="bg-[#f7f7f7] w-10 py-1 font-semibold border-l-0"
               onClick={() => setQuantity((prev) => prev + 1)}
             >
               +
@@ -239,7 +240,6 @@ export const ProductDetailInfo = ({
             Buy now
           </button>
           <button
-            // disabled={selectedVariant && selectedVariant.stock === 0}
             className={`${
               selectedVariant && selectedVariant.stock === 0
                 ? "cursor-not-allowed opacity-50"

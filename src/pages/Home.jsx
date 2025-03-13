@@ -45,8 +45,10 @@ export const Home = () => {
       ) : (
         <>
           <Toaster position="top-center" reverseOrder={false} />
-          <Banner />
-          <TopCategories title={"Our Top Categories"} />
+          <div className="px-3 lg:px-0">
+            <Banner />
+            <TopCategories title={"Our Top Categories"} />
+          </div>
           <ListProduct
             title={"Popular Products 2023"}
             productList={popularProduct}

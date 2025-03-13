@@ -20,9 +20,9 @@ const Product = () => {
   }, [categoryID]);
 
   return (
-    <div className="py-10 px-4 lg:px-10">
+    <div className="py-10 px-4 mt-8 md:mt-6 lg:mt-0 lg:px-10">
       <Toaster position="top-center" reverseOrder={false} />
-      
+
       {/* Category Title */}
       <h1 className="mb-5 flex gap-3 items-center text-2xl font-semibold text-gray-800">
         {categoryName}{" "}
@@ -32,19 +32,19 @@ const Product = () => {
       </h1>
 
       {/* Products Grid */}
-        {products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {products.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {products.map((item, index) => (
             <div key={index} className="relative w-full">
               <ProductCard product={item} />
             </div>
           ))}
         </div>
-        ) : (
-          <p className="text-center text-gray-500 text-lg mt-10">
-            No products found.
-          </p>
-        )}
+      ) : (
+        <p className="text-center text-gray-500 text-lg mt-10">
+          No products found.
+        </p>
+      )}
     </div>
   );
 };
