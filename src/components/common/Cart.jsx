@@ -65,7 +65,7 @@ export default function Cart({ open, setOpen }) {
   const handleQuantityChange = (item_id, newQuantity) => {
     setQuantities((prev) => ({
       ...prev,
-      [item_id]: Math.max(1, Math.min(10, newQuantity)), // Limit between 1 and 10
+      [item_id]: Math.max(1, newQuantity), // Only ensures minimum is 1
     }));
   };
 
@@ -175,13 +175,9 @@ export default function Cart({ open, setOpen }) {
                                   </span>
                                   <button
                                     onClick={() =>
-                                      handleQuantityChange(
-                                        product.item_id,
-                                        quantities[product.item_id] + 1
-                                      )
+                                      handleQuantityChange(product.item_id, quantities[product.item_id] + 1)
                                     }
                                     className="px-2 py-1 border border-gray-300 rounded-md text-gray-600 disabled:opacity-50"
-                                    disabled={quantities[product.item_id] >= 10}
                                   >
                                     +
                                   </button>

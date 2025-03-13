@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-
-// npm install react-toastify: hiển thị thông báo đẹp
 
 const Register = () => {
   const nav = useNavigate();
@@ -14,9 +12,10 @@ const Register = () => {
     formState: { errors },
     getValues,
   } = useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false); // Thêm state để theo dõi trạng thái gửi yêu cầu
 
   const onSubmit = async (data) => {
-    console.log(data);
+    setIsSubmitting(true); // Disable nút khi bắt đầu gửi yêu cầu
     try {
       const response = await fetch(
         "https://ecommerce-gh8q.onrender.com/api/auth/register",
@@ -36,11 +35,14 @@ const Register = () => {
       const result = await response.json();
       toast.success("Registration successful!");
       setTimeout(() => {
-        nav("/login")
+        nav("/login");
       }, 2000); // 2000 ms = 2 giây
       console.log(result);
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Registration failed. Please try again."); // Hiển thị thông báo lỗi nếu thất bại
+    } finally {
+      setIsSubmitting(false); // Enable lại nút sau khi yêu cầu hoàn tất
     }
   };
 
@@ -70,7 +72,7 @@ const Register = () => {
           )}
         </div>
 
-        <div className="flex flex-col  gap-2">
+        <div className="flex flex-col gap-2">
           <label htmlFor="email">Email</label>
           <input
             className="border-1 border-[#d1d5dc] px-2 py-2 rounded-md"
@@ -85,7 +87,7 @@ const Register = () => {
           />
           {errors.email && (
             <span className="text-red-500">{errors.email.message}</span>
-          )}
+)}
         </div>
 
         <div className="flex flex-col gap-2">
@@ -138,7 +140,10 @@ const Register = () => {
         <input
           type="submit"
           value="Sign up"
-          className="bg-black text-white py-2 font-semibold px-4 rounded-md hover:bg-gray-800 cursor-pointer"
+          disabled={isSubmitting} // Disable nút khi isSubmitting là true
+          className={`bg-black text-white py-2 font-semibold px-4 rounded-md hover:bg-gray-800 cursor-pointer ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         />
         <p className="text-center">
           You already have an account?{" "}
