@@ -3,6 +3,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { IoClose, IoSearch } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getSuggestions } from "../../services/productService";
+import { useDebounce } from "@uidotdev/usehooks";
 
 const Searchbar = ({ categories }) => {
   const [isDropDown, setIsDropDown] = useState(false);
@@ -17,6 +18,9 @@ const Searchbar = ({ categories }) => {
   const dropdownRef = useRef(null);
   const location = useLocation();
 
+  // Sử dụng useDebounce để tạo giá trị debounce với delay 300ms
+  const debouncedSearchTerm = useDebounce(searchByProduct, 400);
+
   const handleDropDown = () => {
     if (searchByProduct.trim()) {
       setIsDropDown((prev) => !prev);
@@ -25,20 +29,20 @@ const Searchbar = ({ categories }) => {
 
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (searchByProduct.trim()) {
-        const data = await getSuggestions(searchByProduct);
+      if (debouncedSearchTerm.trim()) {
+        const data = await getSuggestions(debouncedSearchTerm);
         setSuggestions(data.suggestions);
-        // console.log(suggestions);
       } else {
-        setSuggestions((prev) => []);
+        setSuggestions([]);
       }
     };
+
     if (!isFirstRender) {
       fetchSuggestions();
     }
 
     setIsFirstRender(false);
-  }, [searchByProduct]);
+  }, [debouncedSearchTerm]); // Theo dõi debouncedSearchTerm thay vì searchByProduct
 
   useEffect(() => {
     if (!searchByProduct.trim()) {
@@ -73,15 +77,13 @@ const Searchbar = ({ categories }) => {
       setSearchByProduct(keyword.trim());
     }
 
-    // Create a new URL object to modify query params
     const params = new URLSearchParams(location.search);
     params.set("keyword", searchTerm);
 
-    // Only update categoryID if it has changed
     if (searchByCategoryID) {
       params.set("categoryID", searchByCategoryID);
     } else {
-      params.delete("categoryID"); // Remove category if not set
+      params.delete("categoryID");
     }
 
     nav(`/search?${params.toString()}`);
@@ -90,11 +92,9 @@ const Searchbar = ({ categories }) => {
   const handleCategorySelect = (category, categoryID, event) => {
     event.stopPropagation();
     setIsDropDown(false);
-    setSelectedCategory((prev) => category);
-    setSearchByCategoryID((prev) => categoryID);
+    setSelectedCategory(category);
+    setSearchByCategoryID(categoryID);
   };
-
-  console.log(searchByCategoryID);
 
   return (
     <div className="order-3 mt-4 lg:order-2 sm:w-full lg:mt-0 lg:flex lg:w-[40%] xl:w-[50%]">
@@ -168,14 +168,14 @@ const Searchbar = ({ categories }) => {
         </button>
 
         {suggestions.length > 0 && (
-          <div className="absolute top-[100%] w-full bg-white border border-gray-300 rounded-md shadow-lg">
+          <div className="pl-5 absolute top-[100%] w-full bg-white border border-gray-300 rounded-md shadow-lg">
             {suggestions.map((suggestion, index) => (
               <div
                 key={index}
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => handleSearchProduct(suggestion.keyword)}
               >
-                {suggestion.keyword} {/* Hiển thị gợi ý */}
+                {suggestion.keyword}
               </div>
             ))}
           </div>

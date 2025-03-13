@@ -87,7 +87,7 @@ const Register = () => {
           />
           {errors.email && (
             <span className="text-red-500">{errors.email.message}</span>
-)}
+          )}
         </div>
 
         <div className="flex flex-col gap-2">
