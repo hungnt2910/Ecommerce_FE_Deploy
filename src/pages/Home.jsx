@@ -33,8 +33,6 @@ export const Home = () => {
 
   return (
     <div>
-      <Toaster position="top-center" reverseOrder={false} />
-
       {loading ? (
         <div className="flex justify-center items-center my-50">
           <SkeletonLoader />{" "}
@@ -46,6 +44,7 @@ export const Home = () => {
         </div>
       ) : (
         <>
+          <Toaster position="top-center" reverseOrder={false} />
           <Banner />
           <TopCategories title={"Our Top Categories"} />
           <ListProduct

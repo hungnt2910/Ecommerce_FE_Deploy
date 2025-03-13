@@ -36,7 +36,7 @@ const Register = () => {
       const result = await response.json();
       toast.success("Registration successful!");
       setTimeout(() => {
-        window.location.href = "/login";
+        nav("/login")
       }, 2000); // 2000 ms = 2 giây
       console.log(result);
     } catch (error) {

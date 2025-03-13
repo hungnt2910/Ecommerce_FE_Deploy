@@ -1,11 +1,30 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { FiX } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import { FiLogOut, FiX } from "react-icons/fi";
 import { FaRegUser, FaRegHeart } from "react-icons/fa6";
 import { RiMailSendLine } from "react-icons/ri";
 import { LuShoppingCart } from "react-icons/lu";
+import { useDispatch } from "react-redux";
+import { resetCartState } from "../../redux/slices/cartSlice";
+import { resetWishlistState } from "../../redux/slices/wishListSlice";
+import toast from "react-hot-toast";
 
-const MobileMenu = ({toggleMenu, navLinks, categories, setIsCartOpen}) => {
+const MobileMenu = ({ toggleMenu, navLinks, categories, setIsCartOpen }) => {
+  const username = JSON.parse(localStorage.getItem("username"));
+  const dispatch = useDispatch();
+  const nav = useNavigate();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.clear();
+    dispatch(resetCartState());
+    dispatch(resetWishlistState());
+    window.location.reload();
+
+    nav("/");
+    toast.success("Logout success");
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-white lg:hidden">
       <div className="flex h-16 items-center justify-between px-4">
@@ -27,14 +46,33 @@ const MobileMenu = ({toggleMenu, navLinks, categories, setIsCartOpen}) => {
       <div className="mt-6 flow-root">
         <div className="space-y-6 px-4 py-2">
           <div>
-            <Link
-              to="/account"
-              className="flex items-center text-base font-medium text-gray-900"
-              onClick={toggleMenu}
-            >
-              <FaRegUser className="mr-3 h-6 w-6 flex-shrink-0" />
-              Account
-            </Link>
+            {username ? (
+              <>
+                <Link
+                  to="/profile"
+                  className="flex items-center text-gray-700 hover:text-gray-900"
+                >
+                  <FaRegUser className="h-6 w-6" />
+                  <div className="ml-2">
+                    <p className="text-xs text-gray-500">{username}</p>
+                    {/* <p className="text-sm font-medium">Logout</p> */}
+                  </div>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="flex items-center text-gray-700 hover:text-gray-900"
+                >
+                  <FaRegUser className="h-6 w-6" />
+                  <div className="ml-2">
+                    <p className="text-xs text-gray-500">Sign in</p>
+                    <p className="text-sm font-medium">Account</p>
+                  </div>
+                </Link>
+              </>
+            )}
           </div>
           <div>
             <Link
@@ -65,6 +103,19 @@ const MobileMenu = ({toggleMenu, navLinks, categories, setIsCartOpen}) => {
               Cart
             </div>
           </div>
+          <div>
+            {username ? (
+              <Link
+                className="flex items-center text-base font-medium text-gray-900"
+                onClick={handleLogout}
+              >
+                <FiLogOut className="mr-3 h-6 w-6 flex-shrink-0" />
+                Logout
+              </Link>
+            ) : (
+              <></>
+            )}
+          </div>
           <div className="border-t border-gray-200 pt-4">
             <h3 className="text-base font-medium text-gray-900">Categories</h3>
             <ul className="mt-2 space-y-2">
@@ -83,17 +134,18 @@ const MobileMenu = ({toggleMenu, navLinks, categories, setIsCartOpen}) => {
           </div>
           <div className="border-t border-gray-200 pt-4">
             <ul className="space-y-4">
-              {navLinks && navLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-base font-medium text-gray-900 hover:text-gray-700"
-                    onClick={toggleMenu}
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
+              {navLinks &&
+                navLinks.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      to={link.href}
+                      className="text-base font-medium text-gray-900 hover:text-gray-700"
+                      onClick={toggleMenu}
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
             </ul>
           </div>
         </div>

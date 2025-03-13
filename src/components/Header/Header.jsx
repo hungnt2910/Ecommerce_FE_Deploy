@@ -37,7 +37,7 @@ const Header = () => {
   return (
     <header className="w-full border-b border-gray-200">
       {/* Top Bar */}
-      <div className="container min-w-full mx-auto px-5 lg:px-20 bg-white fixed top-0 z-50">
+      <div className="container min-w-full mx-auto px-10 lg:px-20 bg-white fixed top-0 z-50">
         <div className="flex flex-wrap items-center justify-between py-4">
           {/* Logo */}
           <Logo />

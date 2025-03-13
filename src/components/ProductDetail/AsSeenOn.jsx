@@ -10,7 +10,7 @@ const CustomPrevArrow = (props) => {
   return (
     <button
       onClick={onClick}
-      className="absolute left-0 z-10 bg-white shadow-lg rounded-full p-1 hover:scale-110 transition-transform text-gray-900 cursor-pointer" 
+      className="absolute left-0 z-10 bg-white shadow-lg rounded-full p-1 hover:scale-110 transition-transform text-gray-900 cursor-pointer"
       style={{ top: "50%", transform: "translateY(-50%)", fontSize: "24px" }}
     >
       <BiChevronLeft size={28} />
@@ -32,35 +32,45 @@ const CustomNextArrow = (props) => {
 };
 
 const AsSeenOn = () => {
-    const [currentSlide, setCurrentSlide] = useState(0);
-    const slidesToShow = 3;
-    const dispatch = useDispatch()
-    const { article } = useSelector((state) => state.productDetails || {});
-    const totalSlides = article.length
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slidesToShow = 3;
+  const dispatch = useDispatch();
+  const { article } = useSelector((state) => state.productDetails || {});
+  const totalSlides = article.length;
 
-    
-    useEffect(() => {
-      dispatch(fetchArticle())
-    }, [dispatch])
+  useEffect(() => {
+    dispatch(fetchArticle());
+  }, [dispatch]);
 
   const settings = {
     dots: false,
-    infinite: false,
+    infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: true, // Shows prev/next arrows
     beforeChange: (oldIndex, newIndex) => setCurrentSlide(newIndex),
     prevArrow: currentSlide > 0 ? <CustomPrevArrow /> : null,
-    nextArrow: currentSlide < totalSlides - slidesToShow ? <CustomNextArrow /> : null,
+    nextArrow:
+      currentSlide < totalSlides - slidesToShow ? <CustomNextArrow /> : null,
     responsive: [
       {
         breakpoint: 768,
-        settings: { slidesToShow: 2, slidesToScroll: 1 },
+        settings: { 
+          slidesToShow: 2, 
+          slidesToScroll: 1, 
+          autoplay: true, // Keep autoplay for even smaller screens
+          autoplaySpeed: 3000,
+        },
       },
       {
         breakpoint: 480,
-        settings: { slidesToShow: 1, slidesToScroll: 1 },
+        settings: { 
+          slidesToShow: 1, 
+          slidesToScroll: 1, 
+          autoplay: true, // Keep autoplay for even smaller screens
+          autoplaySpeed: 3000,
+        },
       },
     ],
   };
