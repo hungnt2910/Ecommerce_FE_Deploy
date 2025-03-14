@@ -37,6 +37,7 @@ export const ProductCard = ({ product }) => {
         console.error("Add to Cart Failed:", err);
         setIsAdding(false);
         toast.error(err);
+        nav("/login")
       });
   };
 
